@@ -96,6 +96,6 @@ if __name__ == '__main__':
         # Save the result to a PDF file
         with open("./recruitment_query_debug.pdf", 'wb') as f:
             f.write(result.getvalue())
-            print(f"Saved result to {f.name}.")
+            print(f'Saved result to "{f.name}".')
     else:
         print("Query failed.")
