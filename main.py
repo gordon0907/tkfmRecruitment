@@ -104,13 +104,15 @@ async def handle_image(update: Update, context: ContextTypes.DEFAULT_TYPE):
         message_id=reply_message.message_id
     )
     logger.info(
-        f"Deleted status message in chat {update.effective_chat.id} with message_id: {reply_message.message_id}")
+        f"Deleted status message in chat {update.effective_chat.id} with message_id: {reply_message.message_id}"
+    )
 
 
 async def handle_non_image(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
     logger.info(
-        f"Received a non-image message from user '{user.username}' (ID: {user.id}) in chat {update.effective_chat.id}")
+        f"Received a non-image message from user '{user.username}' (ID: {user.id}) in chat {update.effective_chat.id}"
+    )
 
     reply_message = await update.message.reply_text(
         "⚠️ *請傳送圖片，而非文字或其他格式的媒體* ⚠️",
