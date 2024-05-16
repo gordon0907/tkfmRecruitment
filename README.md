@@ -138,7 +138,7 @@ For iOS users, **do not** use the Drag-and-Drop screenshot function, as it signi
 ### Multi-language Support
 
 Currently, there are no plans to support other languages for the game interface. However, you can manually change the
-language settings by editing `image_ocr.py` and `tkfmtool.py`. You can also modify `main.py` to support other languages
+language settings by editing `image_ocr.py` and `tkfmtools.py`. You can also modify `main.py` to support other languages
 for the Telegram bot.
 
 ## Credit
