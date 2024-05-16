@@ -47,6 +47,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def handle_image(update: Update, context: ContextTypes.DEFAULT_TYPE):
     async def overwrite_message_text(message, new_text):
+        """
+        Update an existing message with new text.
+        """
         updated_message = await context.bot.edit_message_text(
             text=new_text,
             chat_id=update.effective_chat.id,
@@ -58,6 +61,7 @@ async def handle_image(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
     logger.info(f"Received an image from user '{user.username}' (ID: {user.id}) in chat {update.effective_chat.id}")
 
+    # Send initial status message in the form of a reply message (1/4)
     reply_message = await update.message.reply_text(
         r"⬇️ *正在下載圖片\.\.\.* _\(1/4\)_",
         parse_mode=ParseMode.MARKDOWN_V2,
@@ -65,33 +69,45 @@ async def handle_image(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
     logger.info(f'Sent reply message in chat {update.effective_chat.id} with text: "{reply_message.text}"')
 
+    # Download the image
     image_file = await update.message.photo[-1].get_file()  # Get the highest resolution version
     image_bytes = await image_file.download_as_bytearray()
 
+    # Update status (2/4)
     await overwrite_message_text(reply_message, r"🔍 *正在提取圖片中的文字\.\.\.* _\(2/4\)_")
 
+    # Convert the image to a NumPy array
     pil_image = Image.open(io.BytesIO(image_bytes))
     image_np = np.array(pil_image)
 
+    # Extract tags using OCR
     loop = asyncio.get_running_loop()
     with ThreadPoolExecutor(max_workers=1) as pool:
+        # Run a blocking synchronous function inside an asynchronous function
         extracted_tags = await loop.run_in_executor(pool, lambda: img_to_tags(image_np))
 
     if len(extracted_tags) != 5:
+        # Handle extraction exception
         await overwrite_message_text(reply_message, "❌ *抱歉，無法從圖片中提取文字。請嘗試其他圖片。*")
         return
 
+    # Update status (3/4)
     await overwrite_message_text(reply_message, r"📜 *正在篩選可行的標籤組合\.\.\.* _\(3/4\)_")
 
+    # Perform recruitment query
     with ThreadPoolExecutor(max_workers=1) as pool:
+        # Run a blocking synchronous function inside an asynchronous function
         pdf_bytes_io = await loop.run_in_executor(pool, lambda: recruitment_query(extracted_tags))
 
     if pdf_bytes_io is None:
+        # Handle query exception
         await overwrite_message_text(reply_message, "❌ *抱歉，標籤組合篩選失敗。請稍後再試。*")
         return
 
+    # Update status (4/4)
     await overwrite_message_text(reply_message, r"📤 *正在傳送結果\.\.\.* _\(4/4\)_")
 
+    # Send the result PDF
     await update.message.reply_document(
         pdf_bytes_io,
         reply_to_message_id=update.message.message_id,
@@ -99,6 +115,7 @@ async def handle_image(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
     logger.info(f"Sent result PDF document as a reply message in chat {update.effective_chat.id}")
 
+    # Delete the status message
     await context.bot.delete_message(
         chat_id=update.effective_chat.id,
         message_id=reply_message.message_id
