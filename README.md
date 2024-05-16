@@ -56,7 +56,7 @@ the [TenkafuMA! toolbox](https://purindaisuki.github.io/tkfmtools/enlist/filter/
       export TELEGRAM_BOT_TOKEN="your-telegram-bot-token"
       ```
 
-    - **Windows**
+    - **Windows (cmd)**
 
       ```sh
       # Replace "your-telegram-bot-token" with your actual Telegram bot token
