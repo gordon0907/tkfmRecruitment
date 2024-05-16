@@ -143,7 +143,7 @@ for the Telegram bot.
 
 ## Credit
 
-### [TenkafuMA! toolbox](https://github.com/purindaisuki/tkfmtools)
+[TenkafuMA! toolbox](https://github.com/purindaisuki/tkfmtools)
 
 ## License
 
