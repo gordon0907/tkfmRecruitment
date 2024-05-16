@@ -141,14 +141,14 @@ async def handle_non_image(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 def main(token: str):
     # Build the application
-    request = HTTPXRequest(read_timeout=60)  # 60 seconds
+    request = HTTPXRequest(connection_pool_size=20, read_timeout=60)  # 60 seconds
     application = ApplicationBuilder().token(token).request(request).build()
 
     # Register the /start command handler
     application.add_handler(CommandHandler('start', start))
 
     # Register the handler for photo messages
-    application.add_handler(MessageHandler(filters.PHOTO, handle_image))
+    application.add_handler(MessageHandler(filters.PHOTO, handle_image, block=False))
 
     # Register the handler for non-photo messages
     application.add_handler(MessageHandler(~filters.PHOTO, handle_non_image))
