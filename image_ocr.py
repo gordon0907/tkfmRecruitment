@@ -30,7 +30,7 @@ SIMILAR_WORD_MAP = {
 logger = logging.getLogger(__name__)
 
 # Initialize the EasyOCR reader
-reader = easyocr.Reader(['ch_tra'], gpu=False)  # Disable GPU
+reader = easyocr.Reader(['ch_tra'])
 
 
 def img_to_tags(image_arr: np.ndarray) -> set:
