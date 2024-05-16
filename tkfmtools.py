@@ -87,7 +87,7 @@ def recruitment_query(tags: set) -> io.BytesIO | None:
             browser.close()
 
 
-# Example usage for debugging
+# Example usage (for debugging)
 if __name__ == '__main__':
     example_tags = {'中體型', '風屬性', '士兵', '亞人', '防禦'}
     result = recruitment_query(example_tags)
