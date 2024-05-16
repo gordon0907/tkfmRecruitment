@@ -18,7 +18,7 @@ TAGS = {
 }
 
 # Define the template for the YAML file containing word mappings for correcting OCR misread words
-YAML_TEMPLATE = """
+YAML_TEMPLATE = """\
 # This YAML file contains word mappings for correcting misread words in the 
 # Optical Character Recognition (OCR) process.
 # Each line in this file represents a mapping from an incorrectly read word 
@@ -30,7 +30,6 @@ YAML_TEMPLATE = """
 #   original_word: replacing_word
 
 土兵: 士兵
-
 """
 
 # Initialize a logger for this module
