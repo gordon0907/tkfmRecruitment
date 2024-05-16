@@ -1,7 +1,9 @@
 import logging
+import os
 
 import easyocr
 import numpy as np
+import yaml
 
 # Define the set of valid tags
 TAGS = {
@@ -15,22 +17,55 @@ TAGS = {
     '削弱', '爆發力', '生存力', '越戰越強', '群體攻擊', '回擊'
 }
 
-# TODO: Move this dictionary to a YAML file for better maintainability and configuration
-# Define a dictionary to map similar words to actual tags
-SIMILAR_WORD_MAP = {
-    '土兵': '士兵',
-    '人頸': '人類',
-    '妨暱者': '妨礙者',
-    '庭族': '魔族',
-    '中腥型': '中體型',
-    '鞘出': '輸出',
-}
+# Define the template for the YAML file containing word mappings for correcting OCR misread words
+YAML_TEMPLATE = """
+# This YAML file contains word mappings for correcting misread words in the 
+# Optical Character Recognition (OCR) process.
+# Each line in this file represents a mapping from an incorrectly read word 
+# (original_word) to the correct word (replacing_word).
+#
+# Please ensure that:
+# - You include the entire word mapping, not just individual characters.
+# - Each mapping follows the format:
+#   original_word: replacing_word
+
+土兵: 士兵
+
+"""
 
 # Initialize a logger for this module
 logger = logging.getLogger(__name__)
 
 # Initialize the EasyOCR reader
 reader = easyocr.Reader(['ch_tra'])
+
+
+def yaml_to_dict(file_path: str) -> dict:
+    """
+    Load a YAML file and return its contents as a dictionary.
+    If the file does not exist, create it using the predefined template.
+
+    :param file_path: The path to the YAML file.
+    :return: A dictionary containing the YAML file contents.
+    """
+    try:
+        # Check if the file exists
+        if not os.path.isfile(file_path):
+            # Create the directory if it doesn't exist
+            directory, filename = os.path.split(file_path)
+            os.makedirs(directory, exist_ok=True)
+
+            # Create the file with the YAML template
+            with open(file_path, 'w', encoding='utf-8', newline='\n') as f:
+                f.write(YAML_TEMPLATE)
+
+        # Load the YAML file and return its contents as a dictionary
+        with open(file_path, 'r', encoding='utf-8') as f:
+            return yaml.safe_load(f)
+
+    except Exception as e:
+        logger.warning(f"An exception caught while loading the YAML file: {e}")
+        return {}
 
 
 def img_to_tags(image_arr: np.ndarray) -> set:
@@ -61,9 +96,13 @@ def img_to_tags(image_arr: np.ndarray) -> set:
     result_words = result_words[ref_word_idx:ref_word_idx + 8]
     logger.debug(f"Words in scope for tag extraction: {result_words}")
 
+    # Load the word mapping dictionary
+    word_mapping = yaml_to_dict("./data/word_mapping.yaml")
+    logger.debug(f"Loaded word mappings from 'word_mapping.yaml': {word_mapping}")
+
     # Replace similar words using the mapping dictionary
-    result_words = [SIMILAR_WORD_MAP.get(word, word) for word in result_words]
-    logger.debug(f"Words after applying similar word mapping: {result_words}")
+    result_words = [word_mapping.get(word, word) for word in result_words]
+    logger.debug(f"Words after applying word mappings: {result_words}")
 
     # Find valid tags by intersecting recognized words with predefined tags
     tags = TAGS.intersection(result_words)
