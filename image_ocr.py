@@ -25,7 +25,7 @@ YAML_TEMPLATE = """\
 # (original_word) to the correct word (replacing_word).
 #
 # Please ensure that:
-# - You include the entire word mapping, not just individual characters.
+# - You include the entire word for mapping, not just individual characters.
 # - Each mapping follows the format:
 #   original_word: replacing_word
 
@@ -96,11 +96,11 @@ def img_to_tags(image_arr: np.ndarray) -> set:
     logger.debug(f"Words in scope for tag extraction: {result_words}")
 
     # Load the word mapping dictionary
-    word_mapping = yaml_to_dict("./data/word_mapping.yaml")
-    logger.debug(f"Loaded word mappings from 'word_mapping.yaml': {word_mapping}")
+    word_mappings = yaml_to_dict("./data/word_mappings.yaml")
+    logger.debug(f"Loaded word mappings from 'word_mappings.yaml': {word_mappings}")
 
     # Replace similar words using the mapping dictionary
-    result_words = [word_mapping.get(word, word) for word in result_words]
+    result_words = [word_mappings.get(word, word) for word in result_words]
     logger.debug(f"Words after applying word mappings: {result_words}")
 
     # Find valid tags by intersecting recognized words with predefined tags
