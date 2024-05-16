@@ -15,6 +15,7 @@ from telegram.request import HTTPXRequest
 from image_ocr import img_to_tags
 from tkfmtools import recruitment_query
 
+# Initialize a logger for this module
 logger = logging.getLogger(__name__)
 
 
@@ -22,6 +23,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
     logger.info(f"User '{user.username}' (ID: {user.id}) has initiated the `/start` command")
 
+    # Send the welcome message
     await update.message.reply_text(
         r"""
 你好！歡迎使用 *TKFM 全境徵才*。🎉🎉
@@ -119,23 +121,31 @@ async def handle_non_image(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 def main(token: str):
+    # Build the application
     request = HTTPXRequest(read_timeout=60)  # 60 seconds
-
     application = ApplicationBuilder().token(token).request(request).build()
 
+    # Register the /start command handler
     application.add_handler(CommandHandler('start', start))
+
+    # Register the handler for photo messages
     application.add_handler(MessageHandler(filters.PHOTO, handle_image))
+
+    # Register the handler for non-photo messages
     application.add_handler(MessageHandler(~filters.PHOTO, handle_non_image))
 
+    # Start polling for updates
     application.run_polling()
 
 
 if __name__ == '__main__':
+    # Configure the logging format and logging level
     logging.basicConfig(
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
         level=logging.INFO
     )
 
+    # Retrieve environment variable
     token_ = os.getenv('TELEGRAM_BOT_TOKEN')
     if token_ is None:
         logger.error("Environment variable `TELEGRAM_BOT_TOKEN` is not set. Please set this variable to run the bot.")
