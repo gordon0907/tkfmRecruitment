@@ -91,10 +91,18 @@ the [TenkafuMA! toolbox](https://purindaisuki.github.io/tkfmtools/enlist/filter/
     ```sh
     # Replace "your-telegram-bot-token" with your actual Telegram bot token
     # Replace "/path/to/local/data" with the path to your local data directory
-    sudo docker run --env TELEGRAM_BOT_TOKEN="your-telegram-bot-token" --volume /path/to/local/data:/app/data tkfm-recruitment
+    sudo docker run --name tkfm-recruitment-container --env TELEGRAM_BOT_TOKEN="your-telegram-bot-token" --volume /path/to/local/data:/app/data tkfm-recruitment
     ```
 
-4. **Save the Docker Image**
+4. **Start the Existing Container**
+
+   After the initial run, you can start the existing container without recreating it:
+
+    ```sh
+    sudo docker start tkfm-recruitment-container
+    ```
+
+5. **Save the Docker Image**
 
    If you need to save the Docker image for future use:
 
