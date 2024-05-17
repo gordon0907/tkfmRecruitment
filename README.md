@@ -99,7 +99,7 @@ the [TenkafuMA! toolbox](https://purindaisuki.github.io/tkfmtools/enlist/filter/
    After the initial run, you can start the existing container without recreating it:
 
     ```sh
-    sudo docker start tkfm-recruitment-container
+    sudo docker start --attach tkfm-recruitment-container
     ```
 
 5. **Save the Docker Image**
