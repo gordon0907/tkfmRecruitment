@@ -53,14 +53,16 @@ def yaml_to_dict(file_path: str) -> dict:
             # Create the directory if it doesn't exist
             directory, filename = os.path.split(file_path)
             os.makedirs(directory, exist_ok=True)
+            logger.info(f'Directory created: "{directory}"')
 
             # Create the file with the YAML template
             with open(file_path, 'w', encoding='utf-8', newline='\n') as f:
                 f.write(YAML_TEMPLATE)
+                logger.info(f'File created: "{file_path}"')
 
         # Load the YAML file and return its contents as a dictionary
         with open(file_path, 'r', encoding='utf-8') as f:
-            return yaml.safe_load(f)
+            return yaml.safe_load(f) or {}
 
     except Exception as e:
         logger.warning(f"An exception caught while loading the YAML file: {e}")
