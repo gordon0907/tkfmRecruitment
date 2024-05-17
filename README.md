@@ -52,14 +52,14 @@ the [TenkafuMA! toolbox](https://purindaisuki.github.io/tkfmtools/enlist/filter/
     - **Unix**
 
       ```sh
-      # Replace "your-telegram-bot-token" with your actual Telegram bot token
+      # Replace `your-telegram-bot-token` with your actual Telegram bot token
       export TELEGRAM_BOT_TOKEN="your-telegram-bot-token"
       ```
 
     - **Windows (cmd)**
 
       ```sh
-      # Replace "your-telegram-bot-token" with your actual Telegram bot token
+      # Replace `your-telegram-bot-token` with your actual Telegram bot token
       set TELEGRAM_BOT_TOKEN="your-telegram-bot-token"
       ```
 
@@ -91,8 +91,8 @@ the [TenkafuMA! toolbox](https://purindaisuki.github.io/tkfmtools/enlist/filter/
    If you don't already have a Telegram bot token, you can obtain one from [BotFather](https://telegram.me/BotFather).
 
     ```sh
-    # Replace "your-telegram-bot-token" with your actual Telegram bot token
-    # Replace "/path/to/local/data" with the path to your local data directory
+    # Replace `your-telegram-bot-token` with your actual Telegram bot token
+    # Replace `/path/to/local/data` with the path to your local data directory
     sudo docker run --name tkfm-recruitment-container --env TELEGRAM_BOT_TOKEN="your-telegram-bot-token" --volume /path/to/local/data:/app/data tkfm-recruitment
     ```
 
