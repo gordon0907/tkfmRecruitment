@@ -120,12 +120,13 @@ without restarting the bot.
 
 ### Enable GPU
 
-GPU is not enabled by default for the OCR process. To enable GPU, install `torch` and `torchvision` before
-installing `easyocr`.
+By default, the OCR process does not utilize the GPU. To enable CUDA or MPS, you must install `torch` and `torchvision`
+before installing `easyocr`. For the installation command, please refer to the
+official [PyTorch](https://pytorch.org/get-started/locally/) page.
 
-For Docker users, you may need to edit the `Dockerfile` accordingly.
+For Docker users, you may need to modify the `Dockerfile` accordingly.
 
-Refer to [EasyOCR](https://github.com/JaidedAI/EasyOCR) for more details.
+Refer to [EasyOCR](https://github.com/JaidedAI/EasyOCR) for more details on enabling GPU for the OCR process.
 
 ### Cannot Read Text from the Screenshot
 
