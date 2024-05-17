@@ -56,11 +56,11 @@ the [TenkafuMA! toolbox](https://purindaisuki.github.io/tkfmtools/enlist/filter/
       export TELEGRAM_BOT_TOKEN="your-telegram-bot-token"
       ```
 
-    - **Windows (cmd)**
+    - **Windows (PowerShell)**
 
-      ```sh
+      ```powershell
       # Replace `your-telegram-bot-token` with your actual Telegram bot token
-      set TELEGRAM_BOT_TOKEN="your-telegram-bot-token"
+      $env:TELEGRAM_BOT_TOKEN = "your-telegram-bot-token"
       ```
 
 4. **Run the Script**
