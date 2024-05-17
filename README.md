@@ -88,6 +88,8 @@ the [TenkafuMA! toolbox](https://purindaisuki.github.io/tkfmtools/enlist/filter/
 
 3. **Run the Docker Image in a Container**
 
+   If you don't already have a Telegram bot token, you can obtain one from [BotFather](https://telegram.me/BotFather).
+
     ```sh
     # Replace "your-telegram-bot-token" with your actual Telegram bot token
     # Replace "/path/to/local/data" with the path to your local data directory
