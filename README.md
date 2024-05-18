@@ -1,6 +1,8 @@
 # tkfmRecruitment
 
 ![Python](https://img.shields.io/badge/python-3.12-blue)
+![Docker](https://img.shields.io/badge/docker-supported-blue)
+![License](https://img.shields.io/github/license/gordon0907/tkfmRecruitment)
 
 This repository contains a Telegram bot for automatically querying recruitment tag combinations from
 the [TenkafuMA! toolbox](https://purindaisuki.github.io/tkfmtools/enlist/filter/) for the TenkafuMA! mobile game.
