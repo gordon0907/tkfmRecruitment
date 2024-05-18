@@ -71,13 +71,13 @@ async def handle_image(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     # Download the image
     image_file = await update.message.photo[-1].get_file()  # Get the highest resolution version
-    image_bytes = await image_file.download_as_bytearray()
+    image_bytearray = await image_file.download_as_bytearray()
 
     # Update status (2/4)
     await overwrite_message_text(reply_message, r"🔍 *正在提取圖片中的文字\.\.\.* _\(2/4\)_")
 
     # Convert the image to a NumPy array
-    pil_image = Image.open(io.BytesIO(image_bytes))
+    pil_image = Image.open(io.BytesIO(image_bytearray))
     image_np = np.array(pil_image)
 
     # Extract tags using OCR
