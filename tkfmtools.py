@@ -64,10 +64,13 @@ def recruitment_query(tags: set) -> io.BytesIO | None:
             logger.debug("Converting screenshot bytes to a PIL image")
             pil_image = Image.open(io.BytesIO(screenshot_bytes))
 
+            # Convert to 'RGB' for consistency across platforms (Windows: 'RGBA', macOS: 'RGB')
+            pil_image = pil_image.convert('RGB')
+
             # Save the PIL image as a PDF in a BytesIO object
             logger.debug("Saving the PIL image as a PDF")
             pdf_bytes_io = io.BytesIO()
-            pil_image.save(pdf_bytes_io, 'PDF')
+            pil_image.save(pdf_bytes_io, 'PDF', quality=100)
 
             # Reset the seek position to the beginning of the BytesIO object
             pdf_bytes_io.seek(0)
