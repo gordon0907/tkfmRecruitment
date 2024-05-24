@@ -15,8 +15,6 @@ def recruitment_query(tags: set) -> io.BytesIO | None:
     :param tags: A set of tags to apply in the query.
     :return: A BytesIO object containing the PDF file if the query is successful, or None if a timeout occurs.
     """
-    timeout = 10000  # 10 seconds
-
     logger.info(f"Starting recruitment query with tags: {tags}")
 
     with sync_playwright() as p:
@@ -26,34 +24,34 @@ def recruitment_query(tags: set) -> io.BytesIO | None:
         context = browser.new_context(viewport={'width': 2160, 'height': 17280})  # 1:8 aspect ratio
         page = context.new_page()
 
+        # Set default timeout
+        page.set_default_timeout(10000)  # 10 seconds
+
         try:
             # Navigate to the TenkafuMA Toolbox
             logger.debug("Navigating to TenkafuMA Toolbox")
-            page.goto("https://purindaisuki.github.io/tkfmtools/enlist/filter/", timeout=timeout)
+            page.goto("https://purindaisuki.github.io/tkfmtools/enlist/filter/")
 
             # Wait until the page is fully loaded (i.e., all 7 tag categories are present)
             logger.debug("Waiting for the page to load completely")
-            page.wait_for_function(
-                "document.querySelectorAll('.filter__BtnGroupWrapper-sc-1hqyze1-0').length === 7",
-                timeout=timeout
-            )
+            page.wait_for_function("document.querySelectorAll('.filter__BtnGroupWrapper-sc-1hqyze1-0').length === 7;")
 
             # Open the settings menu
             logger.debug("Opening settings menu")
-            page.click('[aria-label="顯示設定"]', timeout=timeout)
+            page.get_by_label('顯示設定').click()
 
-            # Change the result display format to "依標籤組合"
+            # Change the result display format
             logger.debug("Changing result display format to '依標籤組合'")
-            page.click('[value="依標籤組合"]', timeout=timeout)
+            page.get_by_label('依標籤組合').click()
 
-            # Close the settings menu by clicking the close button
+            # Close the settings menu
             logger.debug("Closing the settings menu")
-            page.click('.Modal__CloseWrapper-sc-o6bkb-2', timeout=timeout)
+            page.get_by_text('×').click()
 
             # Click on each tag in the set `tags`
             for tag in tags:
                 logger.debug(f"Selecting tag: {tag}")
-                page.click(f'text="{tag}"', timeout=timeout)
+                page.get_by_text(tag).click()
 
             # Capture the result as image bytes
             logger.debug("Capturing the result as an image")
