@@ -69,12 +69,12 @@ def yaml_to_dict(file_path: str) -> dict:
         return {}
 
 
-def img_to_tags(image_arr: np.ndarray) -> set:
+def img_to_tags(image_arr: np.ndarray) -> list:
     """
     Extract tags from an image using OCR.
 
     :param image_arr: The input image as a numpy array.
-    :return: A set of valid tags found in the image.
+    :return: A list of valid tags found in the image.
     """
     logger.info("Starting OCR process")
 
@@ -90,7 +90,7 @@ def img_to_tags(image_arr: np.ndarray) -> set:
         ref_word_idx = result_words.index('招募條件')
     except ValueError:
         logger.warning("'招募條件' not found in the OCR results")
-        return set()  # Return an empty set if '招募條件' is not found
+        return []  # Return an empty list if '招募條件' is not found
 
     # Limit the scope for filtering tags
     # E.g., ['招募條件', '最多選擇三項', '中體型', '風屬性', '土兵', '亞人', '防禦', '本日剩餘更換2次']
@@ -105,8 +105,8 @@ def img_to_tags(image_arr: np.ndarray) -> set:
     result_words = [word_mappings.get(word, word) for word in result_words]
     logger.debug(f"Words after applying word mappings: {result_words}")
 
-    # Find valid tags by intersecting recognized words with predefined tags
-    tags = TAGS.intersection(result_words)
+    # Find valid tags by filtering recognized words that are in predefined tags
+    tags = [word for word in result_words if word in TAGS]
     logger.info(f"Extracted tags: {tags}")
 
     return tags
