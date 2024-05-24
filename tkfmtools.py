@@ -34,7 +34,8 @@ def recruitment_query(tags: set) -> io.BytesIO | None:
 
             # Wait until the page is fully loaded (i.e., all 7 tag categories are present)
             logger.debug("Waiting for the page to load completely")
-            page.wait_for_function("document.querySelectorAll('.filter__BtnGroupWrapper-sc-1hqyze1-0').length === 7;")
+            page.wait_for_function("['屬性', '定位', '種族', '體型', 'ㄋㄋ', '階級', '其他']"
+                                   ".every(word => document.body.innerText.includes(word));")
 
             # Open the settings menu
             logger.debug("Opening settings menu")
@@ -53,10 +54,13 @@ def recruitment_query(tags: set) -> io.BytesIO | None:
                 logger.debug(f"Selecting tag: {tag}")
                 page.get_by_text(tag).click()
 
+            # Wait for all images to load completely
+            logger.debug("Waiting for all images to load completely")
+            page.wait_for_function("Array.from(document.getElementsByTagName('img')).every(img => img.complete);")
+
             # Capture the result as image bytes
             logger.debug("Capturing the result as an image")
-            result_table = page.query_selector('.Scrollable-sc-1ueymsi-0')
-            screenshot_bytes = result_table.screenshot()
+            screenshot_bytes = page.locator('table').screenshot()
 
             # Convert bytes to a PIL image
             logger.debug("Converting screenshot bytes to a PIL image")
