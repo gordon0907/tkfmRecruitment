@@ -8,11 +8,11 @@ from playwright.sync_api import TimeoutError as PlaywrightTimeoutError, sync_pla
 logger = logging.getLogger(__name__)
 
 
-def recruitment_query(tags: set) -> io.BytesIO | None:
+def recruitment_query(tags: list) -> io.BytesIO | None:
     """
     Performs a recruitment query using the specified tags and returns the results as a PDF.
 
-    :param tags: A set of tags to apply in the query.
+    :param tags: A list of tags to apply in the query.
     :return: A BytesIO object containing the PDF file if the query is successful, or None if a timeout occurs.
     """
     logger.info(f"Starting recruitment query with tags: {tags}")
@@ -49,7 +49,7 @@ def recruitment_query(tags: set) -> io.BytesIO | None:
             logger.debug("Closing the settings menu")
             page.get_by_text('×').click()
 
-            # Click on each tag in the set `tags`
+            # Click on each tag in the `tags` list
             for tag in tags:
                 logger.debug(f"Selecting tag: {tag}")
                 page.get_by_text(tag).click()
@@ -94,7 +94,7 @@ def recruitment_query(tags: set) -> io.BytesIO | None:
 
 # Example usage (for debugging)
 if __name__ == '__main__':
-    example_tags = {'中體型', '風屬性', '士兵', '亞人', '防禦'}
+    example_tags = ['中體型', '風屬性', '士兵', '亞人', '防禦']
     result = recruitment_query(example_tags)
 
     if result:
