@@ -9,6 +9,7 @@ import numpy as np
 from PIL import Image
 from telegram import Update
 from telegram.constants import ParseMode
+from telegram.error import TimedOut
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, MessageHandler, filters
 from telegram.request import HTTPXRequest
 
@@ -108,11 +109,16 @@ async def handle_image(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await overwrite_message_text(reply_message, r"📤 *正在傳送結果\.\.\.* _\(4/4\)_")
 
     # Send the result PDF
-    await update.message.reply_document(
-        pdf_bytes_io,
-        reply_to_message_id=update.message.message_id,
-        filename=f"{str(extracted_tags).replace("'", '')}.pdf"
-    )
+    while True:
+        try:
+            await update.message.reply_document(
+                pdf_bytes_io,
+                reply_to_message_id=update.message.message_id,
+                filename=f"{str(extracted_tags).replace("'", '')}.pdf"
+            )
+            break
+        except TimedOut:
+            pdf_bytes_io.seek(0)
     logger.info(f"Sent result PDF document as a reply message in chat {update.effective_chat.id}")
 
     # Delete the status message
